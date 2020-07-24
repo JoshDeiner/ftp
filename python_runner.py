@@ -83,8 +83,9 @@ class FtpMiddleware:
         with open(upload_file_path, "rb") as data:
             blob_client.upload_blob(data)
 
-    def close_conn(self, ftp):
+    def close_conn(self):
         # quit and close the connection
+        ftp = self.set_ftp()
         ftp.quit()
 
     def download_files(self, filename="some_file.txt"):
@@ -92,8 +93,6 @@ class FtpMiddleware:
         # local file name you want to download
         with open(filename, "wb") as file:
             ftp.retrbinary(f"RETR {filename}", file.write)
-        # quit and close the connection
-        ftp.quit()
 
     def init_transfer(self):
         ftp = self.set_ftp()
@@ -121,3 +120,4 @@ if __name__ == "__main__":
     #tc.set_access()
     #tc.connect_azure()
     #tc.init_transfer()
+    tc.close_conn()
