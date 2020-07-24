@@ -1,8 +1,10 @@
 can download
 can upload
-need to transfer between servers
-
+can transfer
 
 good sources
 https://www.thepythoncode.com/article/list-files-and-directories-in-ftp-server-in-python
 https://towardsdatascience.com/datalake-file-ingestion-from-ftp-to-aws-s3-253022ae54d4
+
+python sdk
+https://portal.azure.com/#blade/Microsoft_Azure_Storage/ContainerMenuBlade/overview/storageAccountId/%2Fsubscriptions%2Faac31668-cda3-4c76-b1d4-0fbc922d94f5%2FresourceGroups%2Fpractice-josh%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Frealstorage/path/quickstartb29f8880-1747-4eff-903f-bab2b6b3e3f3/etag/"0x8D82F7E69DD9776"/defaultEncryptionScope/%24account-encryption-key/denyEncryptionScopeOverride//defaultId//publicAccessVal/None
