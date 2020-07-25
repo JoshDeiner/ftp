@@ -3,7 +3,11 @@ can upload
 can transfer
 
 good sources
+why use the setup? https://stackoverflow.com/questions/48434941/pysftp-vs-paramiko
+
 https://www.thepythoncode.com/article/list-files-and-directories-in-ftp-server-in-python
+
+interesting/relevant article
 https://towardsdatascience.com/datalake-file-ingestion-from-ftp-to-aws-s3-253022ae54d4
 
 python sdk
