@@ -1,6 +1,6 @@
 
 
-#if you want to test this repo, set this up locally with the below or similar
+# if you want to test this repo, set this up locally with the below or similar
 
 * https://linuxconfig.org/how-to-setup-ftp-server-on-ubuntu-20-04-focal-fossa-linux
 
