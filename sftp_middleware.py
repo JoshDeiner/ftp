@@ -12,10 +12,8 @@ def validate_input(sftp, action_func, input_data, env):
     if sftp.isfile(input_data) or sftp.isdir(input_data):
         return 0
 
-
 def download_file(sftp, file_name="some_file.txt"):
     sftp.get(file_name)
-
 
 def upload_file(sftp, file_name="some_file.txt"):
     # probably need to check local path
@@ -23,7 +21,6 @@ def upload_file(sftp, file_name="some_file.txt"):
     sftp.put(file_name) if check_path is True else print(
         f"status of file check {check_path== True}"
     )
-
 
 def upload_directory(sftp, directory="some_folder"):
     # recursively copy files and directories from local static, to remote static,
