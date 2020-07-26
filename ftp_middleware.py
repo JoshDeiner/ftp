@@ -6,7 +6,7 @@ if cant move files directly from servers without downloading in between, need op
 can include partition based on block size
 """
 
-import ftplib, os, uuid
+import ftplib, pysftp, os, uuid
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 
@@ -114,7 +114,8 @@ class FtpMiddleware:
 if __name__ == "__main__":
     tc = FtpMiddleware()
     print(tc)
-    tc.upload_file()
+    tc.secure_conn()
+    #tc.upload_file()
     #tc.download_files()
     #tc.upload_folder()
     #tc.set_access()
