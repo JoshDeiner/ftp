@@ -11,4 +11,4 @@
 
 * docker run -p 2222:22 -d atmoz/sftp foo:pass:::upload
 
-* sftp -P 2222 foo@<host-ip>
+* sftp -P 2222 foo@hostip
