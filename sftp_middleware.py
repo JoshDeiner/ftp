@@ -20,8 +20,24 @@ def post_actions(sftp):
     print("ending transaction ||| local dir below")
     print(sftp.listdir())
 
+def render_sftp_action(sftp, file_name="some_file.txt", directory="myfolder", remote_dir="thisdir"):
+        sftp_swtch_commands = {
+            "download_f": sftp.get,  # download to local from remote
+            "upload_f": sftp.put,  # upload to remote from local
+            "ls": sftp.listdir,  # inspect surroundings like ls in unix
+            "remove_f": sftp.remove,  # delete file in remote
+            "upload_dir": sftp.put_r,  # recursive put dir, logic will need to be amended to change for file vs dir
+        }
+        # switch statement to return sftp action
+        func = sftp_swtch_commands.get(action, "no sftp actions available")
+        #validation check and switch statement to return correct action for data type: file vs folder
+        validation_result = validate_data_avail(sftp, file_name, directory)
+        validation_switch = {0: (file_name), 1: (directory, remote_dir)}
+        # initialize sftp action
+        func(validation_switch.get(validation_result, "no data provided"))
 
-def sftp_conn(action, file_name="some_file.txt", directory="myfolder", remote_dir="thisdir"):
+
+def sftp_conn(action):
     """ 
 connect to sftp server and render correct sftp action depedent on switch statement
 directory have been added as defaulted just to show functionality.
@@ -33,20 +49,7 @@ they should probably be moved when logic becomes more mature
         password=os.getenv("SPASSWORD"),
     ) as sftp:
         sftp.chdir("sftpuser/sftp-test")
-        sftp_swtch_commands = {
-            "download_f": sftp.get,  # download to local from remote
-            "upload_f": sftp.put,  # uploaf to remote from local
-            "ls": sftp.listdir,  # inspect surroundings like ls in unix
-            "remove_f": sftp.remove,  # delete file in remote
-            "upload_dir": sftp.put_r,  # recursive put dir, logic will need to be amended to change for file vs dir
-        }
-        # switch statement to return sftp action
-        func = sftp_swtch_commands.get(action, "no stfp actions available")
-        #validation check and switch statement to return correct action for data type: file vs folder
-        validation_result = validate_data_avail(sftp, file_name, directory)
-        validation_switch = {0: (file_name), 1: (directory, remote_dir)}
-        # initialize sftp action
-        func(validation_switch.get(validation_result, "no data provided"))
+        render_sftp_actions(sftp)
         # list directory upon completion
         post_actions(sftp)
 
