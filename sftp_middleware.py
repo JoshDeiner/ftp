@@ -20,7 +20,7 @@ def post_actions(sftp):
     print("ending transaction ||| local dir below")
     print(sftp.listdir())
 
-def render_sftp_action(sftp, file_name="some_file.txt", directory="myfolder", remote_dir="thisdir"):
+def render_sftp_action(sftp, action, file_name="some_file.txt", directory="myfolder", remote_dir="thisdir"):
         sftp_swtch_commands = {
             "download_f": sftp.get,  # download to local from remote
             "upload_f": sftp.put,  # upload to remote from local
@@ -49,7 +49,7 @@ they should probably be moved when logic becomes more mature
         password=os.getenv("SPASSWORD"),
     ) as sftp:
         sftp.chdir("sftpuser/sftp-test")
-        render_sftp_actions(sftp)
+        render_sftp_action(sftp, action)
         # list directory upon completion
         post_actions(sftp)
 
