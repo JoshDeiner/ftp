@@ -48,7 +48,7 @@ they should probably be moved when logic becomes more mature
         username=os.getenv("THISUSER"),
         password=os.getenv("SPASSWORD"),
     ) as sftp:
-        sftp.chdir("sftpuser/sftp-test")
+        sftp.chdir(os.getenv("begin_path"))
         render_sftp_action(sftp, action)
         # list directory upon completion
         post_actions(sftp)
