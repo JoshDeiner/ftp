@@ -1,5 +1,4 @@
-import pysftp
-import os
+import pysftp, os
 
 #  file to connect to sftp
 
@@ -7,54 +6,60 @@ import os
 # https://pysftp.readthedocs.io/en/release_0.2.9/cookbook.html#pysftp-connection-put-r
 
 
-def validate_input(sftp, action_func, input_data, env):
-    """ function to validate if folder/file exists within remote file system  """
-    if sftp.isfile(input_data) or sftp.isdir(input_data):
+def validate_data_avail(sftp, data_obj='some_file.txt', directory='mydirectory'):
+    ''' check if data can be operated upon  '''
+    if sftp.isfile(data_obj) or os.path.isfile(data_obj):
         return 0
-
-def download_file(sftp, file_name="some_file.txt"):
-    sftp.get(file_name)
-
-def upload_file(sftp, file_name="some_file.txt"):
-    # probably need to check local path
-    check_path = os.path.isfile(file_name)
-    sftp.put(file_name) if check_path is True else print(
-        f"status of file check {check_path== True}"
-    )
-
-def upload_directory(sftp, directory="some_folder"):
-    # recursively copy files and directories from local static, to remote static,
-    # preserving modification times on the files
-    # match folder needs to already exist even if empty
-    remote_folder = "myfolder"
-    sftp.put_r(directory, remote_folder, preserve_mtime=True)
+    elif sftp.isdir(directory):
+        return 1
+    else:
+        return 2
 
 
-def sftp_conn(func):
+def post_actions(sftp):
+    print("ending transaction ||| local dir below")
+    print(sftp.listdir())
+
+
+def sftp_conn(action, file_name="some_file.txt", directory="myfolder", remote_dir="thisdir"):
+    """ 
+connect to sftp server and render correct sftp action depedent on switch statement
+directory have been added as defaulted just to show functionality.
+they should probably be moved when logic becomes more mature
+"""
     with pysftp.Connection(
-        os.getenv("MYHOST"), username=os.getenv("THISUSER"), password=os.getenv("IDEA")
+        os.getenv("MYHOST"),
+        username=os.getenv("THISUSER"),
+        password=os.getenv("SPASSWORD"),
     ) as sftp:
         sftp.chdir("sftpuser/sftp-test")
-        # set up base context manager if you will have multiple directories that need to be iterated through
-        # with sftp.cd(base_dir):
-        logic = validate_input(sftp, func, "some_file.txt", "remote")
-        func(sftp) if logic == 0 else print("failure")
+        sftp_swtch_commands = {
+            "download_f": sftp.get,  # download to local from remote
+            "upload_f": sftp.put,  # uploaf to remote from local
+            "ls": sftp.listdir,  # inspect surroundings like ls in unix
+            "remove_f": sftp.remove,  # delete file in remote
+            "upload_dir": sftp.put_r,  # recursive put dir, logic will need to be amended to change for file vs dir
+        }
+        # switch statement to return sftp action
+        func = sftp_swtch_commands.get(action, "no stfp actions available")
+        #validation check and switch statement to return correct action for data type: file vs folder
+        validation_result = validate_data_avail(sftp, file_name, directory)
+        validation_switch = {0: (file_name), 1: (directory, remote_dir)}
+        # initialize sftp action
+        func(validation_switch.get(validation_result, "no data provided"))
+        # list directory upon completion
+        post_actions(sftp)
 
 
 def init_safe_transfer(action):
-    switch_st = {
-        "upload_f": upload_file,
-        "download_f": download_file,
-        "upload_d": upload_directory,
-    }
-    func = switch_st[action]
     try:
-        sftp_conn(func)
+        sftp_conn(action)
+        print("**** finish transaction ****")
     except:
-        print("failed to connect")
+        print("failed to finish")
 
 
 if __name__ == "__main__":
-    # action = "upload_f"
-    action = "download_f"
+    action = "upload_f"
+    #action = "download_f"
     init_safe_transfer(action)
